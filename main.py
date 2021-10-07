@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
     consumer = KafkaConsumer(#TOPIC,
                              bootstrap_servers=bootstrap_servers,
-                             group_id=2,
+                             group_id=0,
                              api_version=(0, 10),
                              security_protocol = security_protocol,
                              # ssl_check_hostname = True,
@@ -25,12 +25,12 @@ if __name__ == '__main__':
                              )
 
     # читать старые данные
-    topic_partition = TopicPartition(TOPIC, 2)
+    topic_partition = TopicPartition(TOPIC, 0)
 
     assigned_topic = [topic_partition]
     consumer.assign(assigned_topic)
     consumer.seek_to_beginning(topic_partition)
     # consumer.seek_to_end(topic_partition)
 
-    for message in next(consumer):
+    for message in consumer:
         print(message.value)
