@@ -14,6 +14,7 @@ if __name__ == '__main__':
 
     consumer = KafkaConsumer(#TOPIC,
                              bootstrap_servers=bootstrap_servers,
+                             group_id=2,
                              api_version=(0, 10),
                              security_protocol = security_protocol,
                              # ssl_check_hostname = True,
