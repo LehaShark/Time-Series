@@ -1,8 +1,6 @@
-from config import config
 from kafka import KafkaConsumer
 from kafka import TopicPartition
-from json import load
-import json
+
 
 from config.config import bootstrap_servers
 
@@ -22,16 +20,16 @@ if __name__ == '__main__':
                              sasl_mechanism=sasl_mechanism,
                              sasl_plain_username=username,
                              sasl_plain_password=password,
-                             ssl_cafile = sertificate_path
+                             ssl_cafile=sertificate_path
                              )
 
     # читать старые данные
     topic_partition = TopicPartition(TOPIC, 2)
+
     assigned_topic = [topic_partition]
     consumer.assign(assigned_topic)
     consumer.seek_to_beginning(topic_partition)
     # consumer.seek_to_end(topic_partition)
-
 
     for message in next(consumer):
         print(message.value)
