@@ -4,38 +4,34 @@ from kafka import TopicPartition
 from json import load
 import json
 
-from config.config import bootstrap_server1, bootstrap_server2, bootstrap_server3
+from config.config import bootstrap_servers
 
 if __name__ == '__main__':
-    TOPIC = 'trade'
-    sasl_mechanism = "PLAIN"
-    username = "forecast"
-    password = "o$aPN26utpR@8ndcWU72"
+    TOPIC = 'alpaca_trade'
+    sasl_mechanism = "SCRAM-SHA-512"
+    username = "user1"
+    password = "gBNk$ccku$iZ*7$5NaUa"
     security_protocol = "SASL_SSL"
+    sertificate_path = "/usr/local/share/ca-certificates/Yandex/YandexCA.crt"
 
     consumer = KafkaConsumer(#TOPIC,
-                             bootstrap_servers=bootstrap_server1,
+                             bootstrap_servers=bootstrap_servers,
                              api_version=(0, 10),
-                             # security_protocol = security_protocol,
+                             security_protocol = security_protocol,
                              # ssl_check_hostname = True,
                              sasl_mechanism=sasl_mechanism,
                              sasl_plain_username=username,
-                             sasl_plain_password=password
+                             sasl_plain_password=password,
+                             ssl_cafile = sertificate_path
                              )
-    #print(consumer.topics())
-    print('ok1')
-    print(type(consumer))
+
+    # читать старые данные
     topic_partition = TopicPartition(TOPIC, 2)
     assigned_topic = [topic_partition]
     consumer.assign(assigned_topic)
-
-    # consumer.poll()
+    consumer.seek_to_beginning(topic_partition)
     # consumer.seek_to_end(topic_partition)
 
-    #partitions = consumer.partitions_for_topic(TOPIC)
-    consumer.seek_to_beginning(topic_partition)
-    #msg = next(consumer)
-    #print (msg)
+
     for message in next(consumer):
-        print('ok')
         print(message.value)
